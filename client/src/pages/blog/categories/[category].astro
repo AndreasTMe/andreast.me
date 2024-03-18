@@ -1,0 +1,114 @@
+---
+import { getCollection } from "astro:content";
+
+import BlogLayout from "@layouts/BlogLayout.astro";
+import BlogArticleCard from "@components/blog/BlogArticleCard.astro";
+import Link from "@components/shared/server/Link.astro";
+import { Route } from "@data/routes";
+import { groupArticles, getCategories, getCalendar } from "@utils/blog";
+import { convertToSlug } from "@utils/string";
+
+import type {
+    BlogArticle,
+    BlogArticleMetadata,
+    BlogCategory,
+    BlogCalendar
+} from "@models/blog";
+
+export async function getStaticPaths() {
+    const blogArticles: BlogArticle[] = await getCollection("blog") ?? [];
+    const blogArticleMetadata = blogArticles.map((article) => (
+        {
+            slug: article.slug,
+            title: article.data.title,
+            description: article.data.description,
+            image: article.data.image,
+            categories: article.data.categories,
+            wordCount: article.data.wordCount,
+            createdDate: article.data.createdDate,
+            lastModifiedDate: article.data.lastModifiedDate
+        }
+    ));
+    const categories = getCategories(blogArticles);
+    const blogCalendar = getCalendar(blogArticles);
+
+    return categories.map((category) => (
+        {
+            params: {
+                category: convertToSlug(category.name)
+            },
+            props: {
+                blogArticleMetadata: blogArticleMetadata,
+                categories: categories,
+                groupedArticles: groupArticles(
+                    blogArticles.filter((article) => article.data.categories.includes(category.name))
+                ),
+                activeCategory: category,
+                blogCalendar: blogCalendar
+            }
+        }
+    ));
+}
+
+interface Props {
+    blogArticleMetadata: BlogArticleMetadata[];
+    groupedArticles: [string, BlogArticle[]][];
+    categories: BlogCategory[];
+    activeCategory: BlogCategory;
+    blogCalendar: BlogCalendar;
+}
+
+const { category } = Astro.params;
+const {
+    blogArticleMetadata,
+    groupedArticles,
+    categories,
+    activeCategory,
+    blogCalendar
+} = Astro.props;
+---
+
+<BlogLayout
+    blogArticleMetadata={blogArticleMetadata}
+    categories={categories}
+    activeCategory={activeCategory}
+    blogCalendar={blogCalendar}
+>
+    <Fragment slot="subtitle">
+        <h2 class="mb-4">
+            Articles about <span>{activeCategory.name}</span>
+        </h2>
+        <span>
+            <Link
+                label="Back to all articles"
+                alt="Back to all articles"
+                href={Route.BLOG}
+                type={{
+                    value: "button",
+                    color: "accent",
+                }}
+            />
+        </span>
+    </Fragment>
+
+    <Fragment slot="articles">
+        {groupedArticles && Array.isArray(groupedArticles) && groupedArticles.length > 0
+            ?
+            <Fragment>
+                {groupedArticles
+                    .map(([groupName, group]) => (
+                        <div class="mb-12 last:mb-0 max-md:mb-8 max-sm:mb-6">
+                            <h4 class="text-text-color/100">{groupName}</h4>
+
+                            {group.map((article) => (
+                                <BlogArticleCard article={article} />
+                            ))}
+                        </div>
+                    ))}
+            </Fragment>
+            :
+            <div class="flex flex-col justify-center items-center">
+                <p>No articles found.</p>
+            </div>}
+    </Fragment>
+</BlogLayout>

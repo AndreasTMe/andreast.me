@@ -1,0 +1,33 @@
+---
+import { Image } from "astro:assets";
+import RootLayout from "@layouts/RootLayout.astro";
+import ContactForm from "@components/forms/ContactForm.svelte";
+import { Route, routes } from "@data/routes";
+---
+
+<RootLayout
+    title="Contact"
+    description="Description for the Contact page"
+>
+    <section class="at-section min-h-full">
+        <div class="at-section-content max-w-full grid-cols-1">
+            <header class="my-8 text-center">
+                <h1>{routes[Route.CONTACT].label}</h1>
+            </header>
+        </div>
+
+        <div class="at-section-content max-w-full grid-cols-2 max-md:grid-cols-1">
+            <div class="flex items-center">
+                <Image
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/310px-Placeholder_view_vector.svg.png"
+                    alt="Placeholder"
+                    width="600"
+                    height="600"
+                />
+            </div>
+            <div class="w-full flex flex-col justify-center gap-4">
+                <ContactForm client:load />
+            </div>
+        </div>
+    </section>
+</RootLayout>

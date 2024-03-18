@@ -1,0 +1,64 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+    label: string;
+    postLabel?: string;
+    alt: string;
+    href: string;
+    icon?: string;
+    iconSize?: string;
+    isExternal?: boolean;
+    active?: boolean;
+}
+
+const {
+    label,
+    postLabel,
+    alt,
+    href,
+    icon,
+    iconSize = "24px",
+    isExternal = false,
+    active = false
+} = Astro.props;
+---
+
+<style>
+    .postLabel[aria-checked="true"] {
+        @apply text-text-opposite-color/100 bg-accent-color/100
+        border-1 border-solid border-secondary-color/100;
+    }
+
+    .postLabel {
+        @apply bg-primary-color/100
+        border-1 border-solid border-primary-color/100;
+    }
+</style>
+
+<a
+    href={href}
+    title={alt}
+    rel={isExternal ? "noopener noreferrer" : undefined}
+    target={isExternal ? "_blank" : "_self"}
+    role="button"
+    tabindex="0"
+    class="at-pill-link at-box-shadow-transition"
+    aria-label={alt}
+    aria-checked={active}
+>
+    <span class="flex text-center items-center">
+        <span>
+            {icon &&
+                <Icon name={icon} size={iconSize} />}
+        </span>
+        <span class="px-2 py-0.5">{label}</span>
+        {postLabel &&
+            <span
+                class="min-w-10 px-2 rounded-2xl postLabel"
+                aria-checked={active}
+            >
+                {postLabel}
+            </span>}
+    </span>
+</a>

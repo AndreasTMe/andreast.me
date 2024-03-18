@@ -1,0 +1,15 @@
+---
+import { websiteMetadata } from "@data/website";
+---
+
+<style>
+    .copyright {
+        @apply h-full flex justify-center items-center gap-2;
+    }
+</style>
+
+<small class="copyright">
+    <span>Copyright &copy; {String(new Date().getFullYear())}, {websiteMetadata.logo}</span>
+    <span> • </span>
+    <span>All Rights Reserved</span>
+</small>

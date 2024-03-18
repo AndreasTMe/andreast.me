@@ -1,0 +1,50 @@
+---
+import { Icon } from "astro-icon/components";
+import Pill from "@components/shared/server/Pill.astro";
+import { Route } from "@data/routes";
+import { convertToSlug } from "@utils/string";
+
+import type { BlogCategory } from "@models/blog";
+
+interface Props {
+    categories: BlogCategory[];
+    activeCategory?: BlogCategory;
+}
+
+const { categories, activeCategory } = Astro.props;
+
+function isActiveCategory(categoryName: string) {
+    return activeCategory && activeCategory.name === categoryName;
+}
+
+function getHref(categoryName: string) {
+    return !isActiveCategory(categoryName)
+        ? `${Route.BLOG}/categories/${convertToSlug(categoryName)}`
+        : Route.BLOG;
+}
+---
+
+<div class="at-basic-card">
+    <div class="at-basic-card-header">
+        <Icon name="mdi:category-outline" height={32} width={32} />
+        <h4>Category</h4>
+    </div>
+
+    <div class="mx-2 my-6 flex flex-wrap justify-center gap-2">
+        {categories && categories.length > 0 ? (
+            categories.map((category) => (
+                <Fragment>
+                    <Pill
+                        label={category.name}
+                        postLabel={category.count.toString()}
+                        alt=`Select "${category.name}" articles only`
+                        href={getHref(category.name)}
+                        active={isActiveCategory(category.name)}
+                    />
+                </Fragment>
+            ))
+        ) : (
+            <p>No categories found.</p>
+        )}
+    </div>
+</div>

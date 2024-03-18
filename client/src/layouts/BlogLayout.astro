@@ -1,0 +1,54 @@
+---
+import RootLayout from "@layouts/RootLayout.astro";
+import BlogCategoryFilter from "@components/blog/BlogCategoryFilter.astro";
+import BlogCalendarFilter from "@components/blog/BlogCalendarFilter.astro";
+import { Route, routes } from "@data/routes";
+import { blogPageMetadata } from "@data/website";
+import { jsonLD } from "@data/json-ld";
+
+import type { BlogArticleMetadata, BlogCategory, BlogCalendar } from "@models/blog";
+
+interface Props {
+    blogArticleMetadata: BlogArticleMetadata[];
+    categories: BlogCategory[];
+    activeCategory?: BlogCategory;
+    blogCalendar: BlogCalendar;
+}
+
+const {
+    blogArticleMetadata,
+    categories,
+    activeCategory,
+    blogCalendar
+} = Astro.props;
+---
+
+<RootLayout
+    title={blogPageMetadata.title}
+    description={blogPageMetadata.description}
+    jsonLD={jsonLD.blog(blogArticleMetadata)}
+>
+    <section class="at-section min-h-[75vh]">
+        <header class="at-section-content max-w-full grid-cols-1">
+            <div class="my-8 text-center">
+                <h1>{routes[Route.BLOG].label}</h1>
+                <slot name="subtitle" />
+            </div>
+        </header>
+
+        <div class="at-section-content max-w-full grid-cols-1">
+            <div class="grid grid-cols-dual-21 gap-8 max-lg:flex max-lg:flex-col-reverse">
+                <div>
+                    <slot name="articles" />
+                </div>
+                <div class="flex flex-col gap-4">
+                    <BlogCategoryFilter
+                        categories={categories}
+                        activeCategory={activeCategory}
+                    />
+                    <BlogCalendarFilter blogCalendar={blogCalendar} />
+                </div>
+            </div>
+        </div>
+    </section>
+</RootLayout>

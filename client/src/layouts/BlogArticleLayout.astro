@@ -1,0 +1,75 @@
+---
+import { Image } from "astro:assets";
+import RootLayout from "./RootLayout.astro";
+import Link from "@components/shared/server/Link.astro";
+import Pill from "@components/shared/server/Pill.astro";
+import { formatDate } from "@utils/date";
+import { convertToSlug } from "@utils/string";
+import { Route } from "@data/routes";
+import { jsonLD } from "@data/json-ld";
+
+import type { BlogArticleMetadata } from "@models/blog";
+
+interface Props {
+    articleMetadata: BlogArticleMetadata,
+}
+
+const { articleMetadata} = Astro.props;
+---
+
+<RootLayout
+    title={articleMetadata.title}
+    description={articleMetadata.description}
+    image={articleMetadata.image}
+    isArticle
+    jsonLD={jsonLD.blogArticle(articleMetadata)}
+>
+    <article>
+        <Image
+            class="at-banner-image"
+            src={articleMetadata.image.src}
+            alt={articleMetadata.image.alt}
+            height={500}
+            width={500}
+            quality="high"
+        />
+
+        <section class="at-section min-h-[25vh]">
+            <header class="at-section-content max-w-[80%] max-lg:max-w-full grid-cols-1">
+                <div class="my-8 text-center not-last-child:mb-4">
+                    <h1>{articleMetadata.title}</h1>
+                    <div class="px-6 flex flex-wrap justify-center items-center gap-4 max-md:px-4 max-md:gap-3 max-sm:px-2 max-sm:gap-2">
+                        {articleMetadata.categories.map((category) => (
+                            <Fragment>
+                                <Pill
+                                    label={category}
+                                    alt=`Go to articles related to "${category}"`
+                                    href=`${Route.BLOG}/categories/${convertToSlug(category)}`
+                                />
+                            </Fragment>
+                        ))}
+                    </div>
+                    <p>{articleMetadata.description}</p>
+                    <p>Published on
+                        <time datetime={articleMetadata.createdDate.toISOString()}>
+                            {formatDate(articleMetadata.createdDate, "MMMM do, yyyy")}
+                        </time>
+                    </p>
+                    <span>
+                        <Link
+                            label="Back to all articles"
+                            alt="Go back to all articles"
+                            href={Route.BLOG}
+                            type={{
+                                value: "button",
+                                color: "accent",
+                            }}
+                        />
+                    </span>
+                </div>
+            </header>
+        </section>
+
+        <slot name="content" />
+    </article>
+</RootLayout>

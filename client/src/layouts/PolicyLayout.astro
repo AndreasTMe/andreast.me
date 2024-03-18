@@ -1,0 +1,43 @@
+---
+import RootLayout from "@layouts/RootLayout.astro";
+import Link from "@components/shared/server/Link.astro";
+import { routes, Route } from "@data/routes";
+import { websiteMetadata } from "@data/website";
+import { formatDate } from "@utils/date";
+
+interface Props {
+    title: string;
+    createdDate: Date;
+    updatedDate?: Date;
+}
+
+const { title, createdDate, updatedDate } = Astro.props;
+---
+
+<RootLayout
+    title={title}
+    description=`The ${title.toLowerCase()} for the ${websiteMetadata.logo} website.`
+>
+    <section class="at-section min-h-[25vh]">
+        <header class="at-section-content max-w-[80%] max-lg:max-w-full grid-cols-1">
+            <div class="my-8 text-center not-last-child:mb-4">
+                <h1>{title}</h1>
+                <p>Created on {formatDate(createdDate, "MMMM do, yyyy")}</p>
+                {updatedDate && <p>Last updated on {formatDate(updatedDate, "MMMM do, yyyy")}</p>}
+                <span>
+                    <Link
+                        label=`Back to ${routes[Route.HOME].label}`
+                        alt=`Go back to the ${routes[Route.HOME].label} page`
+                        href={Route.HOME}
+                        type={{
+                            value: "button",
+                            color: "accent",
+                        }}
+                    />
+                </span>
+            </div>
+        </header>
+    </section>
+
+    <slot name="content" />
+</RootLayout>

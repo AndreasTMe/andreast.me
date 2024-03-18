@@ -1,0 +1,182 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import Link from "@components/shared/server/Link.astro";
+import Pill from "@components/shared/server/Pill.astro";
+import { Route } from "@data/routes";
+import { formatDate } from "@utils/date";
+import { convertToSlug } from "@utils/string";
+
+import type { BlogArticle } from "@models/blog";
+
+interface Props {
+    article: BlogArticle;
+}
+
+const { article } = Astro.props;
+---
+
+<style>
+    .content-container {
+        @apply p-6 rounded-t flex gap-4;
+    }
+
+    .content-container .image {
+        @apply h-32 min-w-32 rounded object-cover object-center pointer-events-none;
+    }
+
+    .content-container h4 {
+        @apply mb-4;
+    }
+
+    .content-container p {
+        @apply overflow-hidden;
+    }
+
+    .categories-container {
+        @apply px-6 py-4 flex gap-4 bg-secondary-color/60;
+    }
+
+    .footer-container {
+        @apply px-6 pt-6 pb-10 rounded-b;
+    }
+
+    .footer-container > span:first-child {
+        @apply flex items-center gap-4;
+    }
+
+    .footer-container > span:last-child {
+        @apply absolute right-6 bottom-8;
+    }
+
+    @media screen and (max-width: 768px) {
+        .content-container {
+            @apply p-4 flex-col gap-3;
+        }
+
+        .content-container .image {
+            @apply w-full;
+        }
+
+        .content-container h4 {
+            @apply mb-3;
+        }
+
+        .categories-container {
+            @apply px-4 py-3 gap-3;
+        }
+
+        .footer-container {
+            @apply px-4 pt-4 pb-7;
+        }
+
+        .footer-container > span:first-child {
+            @apply gap-3;
+        }
+
+        .footer-container > span:last-child {
+            @apply right-4 bottom-4;
+        }
+    }
+
+    @media screen and (max-width: 425px) {
+        .content-container {
+            @apply p-3 gap-2;
+        }
+
+        .content-container h4 {
+            @apply mb-2;
+        }
+
+        .categories-container {
+            @apply px-3 py-2 gap-3;
+        }
+
+        .footer-container {
+            @apply p-3 flex flex-col gap-2;
+        }
+
+        .footer-container > span:first-child {
+            @apply gap-2;
+        }
+
+        .footer-container > span:last-child {
+            @apply static right-0 bottom-0 self-end;
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        .content-container {
+            @apply p-2 gap-1;
+        }
+
+        .categories-container {
+            @apply p-2 gap-2;
+        }
+
+        .footer-container {
+            @apply p-2 gap-1;
+        }
+    }
+</style>
+
+<div class="at-basic-card relative mx-0 my-2">
+    <div class="content-container">
+        <Image
+            class="image"
+            src={article.data.image.src}
+            alt={article.data.image.alt}
+            height={500}
+            width={500}
+        />
+
+        <div>
+            <h4>{article.data.title}</h4>
+            <p>{article.data.description}</p>
+        </div>
+    </div>
+    <div class="categories-container">
+        {article.data.categories.map((category) => (
+            Astro.url.pathname === `${Route.BLOG}/categories/${convertToSlug(category)}` ? (
+                <Fragment>
+                    <Pill
+                        label={category}
+                        alt=`Deselect "${category}" articles`
+                        href={Route.BLOG}
+                        active
+                    />
+                </Fragment>
+            ) : (
+                <Fragment>
+                    <Pill
+                        label={category}
+                        alt=`Select "${category}" articles only`
+                        href={`${Route.BLOG}/categories/${convertToSlug(category)}`}
+                    />
+                </Fragment>
+            )
+        ))}
+    </div>
+    <div class="footer-container">
+        <span>
+            <Icon name="mdi:calendar-month-outline" />
+            <p>
+                <time datetime={article.data.createdDate.toISOString()}>
+                    {formatDate(article.data.createdDate, "MMMM do, yyyy")}
+                </time>
+            </p>
+        </span>
+
+        <span>
+            <Link
+                label="View"
+                alt=`Go to "${article.data.title}" article`
+                href={`${Route.BLOG}/${article.slug}`}
+                type={{
+                    value: "button",
+                    color: "accent",
+                }}
+            />
+        </span>
+    </div>
+</div>

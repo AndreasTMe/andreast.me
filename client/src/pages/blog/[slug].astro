@@ -1,0 +1,64 @@
+---
+import { getCollection, CollectionEntry } from "astro:content";
+import BlogArticleLayout from "@layouts/BlogArticleLayout.astro";
+import SideMenu from "@components/menus/BlogArticleSideMenu.svelte";
+import { Route } from "@data/routes";
+import { createHeadingTree } from "@utils/blog";
+
+import type { BlogArticle } from "@models/blog";
+
+export async function getStaticPaths() {
+    const blogArticles: BlogArticle[] = await getCollection("blog") ?? [];
+
+    return blogArticles.map((article) => (
+        {
+            params: {
+                slug: article.slug
+            },
+            props: {
+                article: article
+            }
+        }
+    ));
+}
+
+interface Props {
+    article: CollectionEntry<"blog">;
+}
+
+const { slug } = Astro.params;
+const { article } = Astro.props;
+
+const { Content, headings } = await article.render();
+
+const headingTree = createHeadingTree(headings, (heading) => {
+    return heading.depth >= 2
+        && heading.depth <= 4
+        && !heading.slug.includes("footnote");
+});
+
+const articleUrl = import.meta.env.SITE + Route.BLOG + "/" + slug;
+const articleMetadata = {
+    slug: article.slug,
+    title: article.data.title,
+    description: article.data.description,
+    image: article.data.image,
+    categories: article.data.categories,
+    wordCount: article.data.wordCount,
+    createdDate: article.data.createdDate,
+    lastModifiedDate: article.data.lastModifiedDate
+};
+---
+
+<BlogArticleLayout articleMetadata={articleMetadata}>
+    <div slot="content" class="at-markdown-section">
+        <SideMenu
+            title={articleMetadata.title}
+            url={articleUrl}
+            headingTree={headingTree}
+            client:only="svelte"
+        />
+
+        <Content />
+    </div>
+</BlogArticleLayout>

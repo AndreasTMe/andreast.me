@@ -1,0 +1,54 @@
+---
+import { getCollection } from "astro:content";
+
+import BlogLayout from "@layouts/BlogLayout.astro";
+import BlogArticleCard from "@components/blog/BlogArticleCard.astro";
+import { groupArticles, getCategories, getCalendar } from "@utils/blog";
+
+import type { BlogArticle } from "@models/blog";
+
+const blogArticles: BlogArticle[] = await getCollection("blog") ?? [];
+
+const blogArticleMetadata = blogArticles.map((article) => (
+    {
+        slug: article.slug,
+        title: article.data.title,
+        description: article.data.description,
+        image: article.data.image,
+        categories: article.data.categories,
+        wordCount: article.data.wordCount,
+        createdDate: article.data.createdDate,
+        lastModifiedDate: article.data.lastModifiedDate
+    }
+));
+const groupedArticles = groupArticles(blogArticles);
+const categories = getCategories(blogArticles);
+const blogCalendar = getCalendar(blogArticles);
+---
+
+<BlogLayout
+    blogArticleMetadata={blogArticleMetadata}
+    categories={categories}
+    blogCalendar={blogCalendar}
+>
+    <Fragment slot="articles">
+        {groupedArticles && Array.isArray(groupedArticles) && groupedArticles.length > 0
+            ?
+            <Fragment>
+                {groupedArticles
+                    .map(([groupName, group]) => (
+                        <div class="mb-12 last:mb-0 max-md:mb-8 max-sm:mb-6">
+                            <h4 class="text-text-color">{groupName}</h4>
+
+                            {group.map((article) => (
+                                <BlogArticleCard article={article} />
+                            ))}
+                        </div>
+                    ))}
+            </Fragment>
+            :
+            <div class="flex flex-col justify-center items-center">
+                <p>No articles found.</p>
+            </div>}
+    </Fragment>
+</BlogLayout>

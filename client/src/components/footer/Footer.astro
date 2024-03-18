@@ -1,0 +1,76 @@
+---
+import FooterMainNavigation from "./FooterMainNavigation.astro";
+import FooterPrivacyNavigation from "./FooterPoliciesNavigation.astro";
+import FooterSocialsNavigation from "./FooterSocialsNavigation.astro";
+import FooterCopyright from "./FooterCopyright.astro";
+import { routes, Route } from "@data/routes";
+import { websiteMetadata } from "@data/website";
+---
+
+<style>
+    .column {
+        @apply flex flex-col items-center;
+    }
+
+    .left a,
+    .center a {
+        @apply text-text-opposite-color dark:text-text-color;
+    }
+
+    .left > *:not(:first-child) {
+        @apply mt-2;
+    }
+
+    .left > *,
+    .center li {
+        @apply py-1;
+    }
+
+    .center ul {
+        @apply list-none;
+    }
+
+    .right {
+        @apply flex flex-col gap-2;
+    }
+
+    .center a:hover {
+        @apply underline;
+    }
+</style>
+
+<footer class="text-small
+            bg-background-opposite-color text-text-opposite-color
+            dark:bg-background-color dark:text-text-color">
+    <section class="at-section h-auto p-10 bg-none gap-6">
+        <div class="at-section-content max-w-full grid-cols-3">
+            <div class="column">
+                <div class="left">
+                    <a href={Route.HOME} title={`Go to the ${routes[Route.HOME].label} page`}>
+                        <h2>{websiteMetadata.logo}</h2>
+                    </a>
+                    <p>
+                        Welcome to my corner of the web where I share my thoughts and experiences in the world of software development.
+                    </p>
+                </div>
+            </div>
+            <div class="column">
+                <div class="center">
+                    <FooterMainNavigation />
+                </div>
+            </div>
+            <div class="column">
+                <div class="right">
+                    <FooterSocialsNavigation />
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="column">
+                <FooterPrivacyNavigation />
+                <FooterCopyright />
+            </div>
+        </div>
+    </section>
+</footer>

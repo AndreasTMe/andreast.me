@@ -1,0 +1,81 @@
+---
+import { Image } from "astro:assets";
+import RootLayout from "@layouts/RootLayout.astro";
+import Link from "@components/shared/server/Link.astro";
+import { Route } from "@data/routes";
+import { websiteMetadata } from "@data/website";
+import { jsonLD } from "@data/json-ld";
+---
+
+<RootLayout
+    title={websiteMetadata.title}
+    description={websiteMetadata.description}
+    jsonLD={jsonLD.home()}
+>
+    <section class="at-section min-h-[75vh] max-md:min-h-[50vh]">
+        <div class="at-section-content max-w-full grid-cols-2 max-md:grid-cols-1">
+            <div class="h-full w-full flex flex-col justify-center">
+                <h1 class="mt-28">Software Development</h1>
+                <p class="text-title-small">
+                    Hello there! I'm Andreas, a software developer. Welcome to my corner of the web where I share my
+                    thoughts and experiences in the world of software development. Enjoy your visit, and may you
+                    discover something valuable. Happy coding!
+                </p>
+                <div>
+                    <Link
+                        label="Visit my Blog"
+                        alt="Visit my Blog"
+                        href={Route.BLOG}
+                        type={{
+                            value: "button",
+                            color: "accent"
+                        }}
+                    />
+                </div>
+            </div>
+            <div class="h-full w-full flex items-center justify-center">
+                <!--TODO: Temporary code below-->
+                <span class="w-96 h-96 bg-background-opposite-color rounded-full"></span>
+            </div>
+        </div>
+    </section>
+
+    <!--TODO: Add section with 3 articles (when they actually exist lol)-->
+
+    <section class="at-section min-h-[75vh] max-md:min-h-[50vh]">
+        <div class="at-section-content max-w-full grid-cols-2 max-md:grid-cols-1">
+            <div class="flex items-center">
+                <!--TODO: Replace with actual image-->
+                <Image
+                    class="rounded"
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/310px-Placeholder_view_vector.svg.png"
+                    alt="Placeholder"
+                    width="600"
+                    height="600"
+                />
+            </div>
+
+            <div class="w-full flex flex-col justify-center gap-4">
+                <h2>About</h2>
+                <p>
+                    Let's all agree that coding is a mix of excitement and occasional frustration, and truth be told, I
+                    wouldn't have it any other way. Even before becoming a developer, I've always enjoyed solving
+                    problems and creating things. This blog is where I capture the highs, lows, and everything in
+                    between of my coding adventures. If you're curious to learn more about me, here's a link to my about
+                    page.
+                </p>
+                <div>
+                    <Link
+                        label="Get to know me..."
+                        alt="Get to know me..."
+                        href={Route.ABOUT}
+                        icon={{
+                            name: "mdi:arrow-right-thin",
+                            position: "right"
+                        }}
+                    />
+                </div>
+            </div>
+        </div>
+    </section>
+</RootLayout>

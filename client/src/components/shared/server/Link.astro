@@ -1,0 +1,73 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+    label: string;
+    alt: string;
+    href: string;
+    type?: {
+        value: "button" | "link";
+        color: "primary" | "secondary" | "accent";
+        disabled?: boolean;
+    };
+    icon?: {
+        name: string;
+        position: "left" | "right";
+        size?: string;
+    };
+    isExternal?: boolean;
+}
+
+const {
+    label,
+    alt,
+    href,
+    type,
+    icon,
+    isExternal = false,
+} = Astro.props;
+---
+
+<Fragment>
+    {type?.value === "button"
+        ? (
+            <a
+                href={type?.disabled ? undefined : href}
+                title={alt}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+                target={isExternal ? "_blank" : "_self"}
+                role={type?.disabled ? "generic" : "button"}
+                tabindex={type?.disabled ? -1 : 0}
+                class="at-button-link at-box-shadow-transition"
+                aria-label={alt}
+                aria-disabled={type?.disabled}
+                data-variant={type?.color}
+            >
+                <span>
+                    {icon && icon.position === "left" &&
+                        <Icon name={icon.name} size={icon.size ?? "24px"} />}
+                    <span>{label}</span>
+                    {icon && icon.position === "right" &&
+                        <Icon name={icon.name} size={icon.size ?? "24px"} />}
+                </span>
+            </a>
+        )
+        : (
+            <a
+                href={href}
+                title={alt}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+                target={isExternal ? "_blank" : "_self"}
+                class="at-enhanced-link"
+                aria-label={alt}
+            >
+                <span>
+                    {icon && icon.position === "left" &&
+                        <Icon name={icon.name} size={icon.size ?? "24px"} />}
+                    <span>{label}</span>
+                    {icon && icon.position === "right" &&
+                        <Icon name={icon.name} size={icon.size ?? "24px"} />}
+                </span>
+            </a>
+        )}
+</Fragment>

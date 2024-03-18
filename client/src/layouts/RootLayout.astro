@@ -1,0 +1,49 @@
+---
+import "@styles/global.css";
+import MainMenu from "@components/menus/MainMenu.astro";
+import Head from "@components/header/Head.astro";
+import Footer from "@components/footer/Footer.astro";
+
+interface Props {
+    title?: string;
+    description?: string;
+    image?: {
+        src: string;
+        alt: string;
+    };
+    isArticle?: boolean;
+    jsonLD?: string;
+    robots?: string;
+}
+
+const {
+    title,
+    description,
+    image,
+    isArticle,
+    jsonLD,
+    robots = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <Head
+        title={title}
+        description={description}
+        image={image}
+        isArticle={isArticle}
+        jsonLD={jsonLD}
+        robots={robots}
+    />
+
+    <body>
+        <MainMenu />
+
+        <main>
+            <slot />
+        </main>
+
+        <Footer />
+    </body>
+</html>

@@ -1,0 +1,27 @@
+---
+import FooterLink from "./FooterLink.astro";
+import { routes } from "@data/routes";
+---
+
+<style>
+    .nav-list li {
+        @apply py-1;
+    }
+</style>
+
+<nav aria-label="Footer Navigation">
+    <ul class="nav-list">
+        {Object.entries(routes)
+               .filter(([_, routeData]) => !routeData.hideInFooter && !routeData.private)
+               .map(([route, value]) => (
+                   <li>
+                       <FooterLink
+                           label={value.label}
+                           additionalStyles="text-text-color"
+                           alt={`Go to the ${value.label} page`}
+                           href={route}
+                       />
+                   </li>
+               ))}
+    </ul>
+</nav>

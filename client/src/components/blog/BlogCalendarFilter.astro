@@ -1,0 +1,27 @@
+---
+import { Icon } from "astro-icon/components";
+import Tree from "@components/shared/server/Tree.astro";
+
+import type { BlogCalendar } from "@models/blog";
+
+interface Props {
+    blogCalendar: BlogCalendar;
+}
+
+const { blogCalendar } = Astro.props;
+---
+
+<div class="at-basic-card">
+    <div class="at-basic-card-header">
+        <Icon name="mdi:calendar-month-outline" height={32} width={32} />
+        <h4>Calendar</h4>
+    </div>
+
+    <div class="my-6">
+        {blogCalendar && Array.isArray(blogCalendar) && blogCalendar.length > 0
+            ?
+            <Tree tree={blogCalendar} />
+            :
+            <p class="text-center">No calendar entries found.</p>}
+    </div>
+</div>

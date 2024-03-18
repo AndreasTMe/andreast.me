@@ -1,0 +1,62 @@
+---
+import MainMenuLink from "./MainMenuLink.astro";
+import ThemeToggle from "./ThemeToggle.svelte";
+import { routes, Route } from "@data/routes";
+import { websiteMetadata } from "@data/website";
+---
+
+<style>
+    .nav-menu {
+        @apply fixed w-full z-[9999] top-0 left-0 px-20 py-5
+        bg-gradient-to-br from-primary-color/40 to-secondary-color/40
+        backdrop-blur-sm
+        shadow-[2px_0_16px_2px_hsla(var(--default-shadow),0.2)];
+    }
+
+    .nav-menu > ul {
+        @apply h-full w-full flex items-center justify-end list-none;
+    }
+
+    .nav-menu > ul > li:first-child {
+        @apply mr-auto whitespace-nowrap;
+    }
+
+    .nav-menu > ul > li:last-child {
+        @apply ml-20;
+    }
+
+    @media screen and (max-width: 1200px) {
+        .nav-menu > ul > li:last-child {
+            @apply ml-12;
+        }
+    }
+
+    @media screen and (max-width: 992px) {
+        .nav-menu > ul > li:last-child {
+            @apply ml-8;
+        }
+    }
+</style>
+
+<nav class="nav-menu" aria-label="Main Navigation">
+    <ul>
+        <li>
+            <a
+                href={Route.HOME}
+                target="_self"
+                title=`${websiteMetadata.logo} Logo`
+                aria-label=`${websiteMetadata.logo} Logo`
+            >
+                <h2>{websiteMetadata.logo}</h2>
+            </a>
+        </li>
+        {Object.entries(routes)
+               .filter(([_, data]) => !data.hideInMainNav && !data.private)
+               .map(([route, data]) => (
+                   <MainMenuLink href={route} label={data.label} />
+               ))}
+        <li>
+            <ThemeToggle client:only="svelte" />
+        </li>
+    </ul>
+</nav>

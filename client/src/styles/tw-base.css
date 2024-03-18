@@ -1,0 +1,231 @@
+@tailwind base;
+
+@layer base {
+    :root {
+        --font-family-primary: "Julius Sans One", sans-serif;
+        --font-family-secondary: "Raleway", sans-serif;
+
+        --font-weight-thin: 200;
+        --font-weight-regular: 400;
+        --font-weight-bold: 700;
+
+        --font-size-title-huge: 3.25rem;
+        --font-size-title-large: 2.5rem;
+        --font-size-title-normal: 1.75rem;
+        --font-size-title-small: 1.25rem;
+        --font-size-base: 1rem;
+
+        --hue: 183;
+
+        --text-color: var(--hue) 4 9;
+        --text-opposite-color: var(--hue) 5 96;
+        --background-color: var(--hue) 5 96;
+        --background-opposite-color: var(--hue) 4 9;
+        --primary-color: var(--hue) 4 86;
+        --secondary-color: var(--hue) 4 76;
+        --accent-color: var(--hue) 67 47;
+
+        --default-shadow: var(--hue), 4%, 9%;
+        --default-shadow-opposite: var(--hue), 4%, 80%;
+        --accent-shadow: var(--hue), 67%, 47%;
+    }
+
+    :root[class~="dark"] {
+        --text-color: var(--hue) 4 80;
+        --text-opposite-color: var(--hue) 5 4;
+        --background-color: var(--hue) 5 4;
+        --background-opposite-color: var(--hue) 4 80;
+        --primary-color: var(--hue) 4 14;
+        --secondary-color: var(--hue) 4 23;
+        --accent-color: var(--hue) 67 40;
+
+        --default-shadow: var(--hue), 4%, 80%;
+        --default-shadow-opposite: var(--hue), 4%, 9%;
+        --accent-shadow: var(--hue), 67%, 40%;
+    }
+
+    *,
+    *::before,
+    *::after {
+        @apply min-w-0 m-0 p-0 box-border
+        transition-[background-color] duration-200 ease-in-out;
+    }
+
+    html {
+        @apply h-full w-full box-border text-base
+        scroll-smooth scroll-pt-32;
+    }
+
+    body {
+        @apply h-full leading-relaxed flex flex-col
+        bg-background-color/100 text-text-color/100
+        font-secondary text-base;
+    }
+
+    body > main {
+        @apply mt-20;
+    }
+
+    body > footer {
+        @apply mt-auto;
+    }
+
+    body::-webkit-scrollbar {
+        @apply w-2;
+    }
+
+    body::-webkit-scrollbar-track {
+        @apply bg-secondary-color;
+    }
+
+    body::-webkit-scrollbar-thumb {
+        @apply bg-accent-color rounded;
+    }
+
+    img {
+        @apply max-w-full h-auto block;
+    }
+
+    a {
+        @apply text-text-color/100 decoration-0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply m-0 font-primary font-bold leading-none;
+    }
+
+    h1 {
+        @apply text-title-huge;
+    }
+
+    h2 {
+        @apply text-title-large ;
+    }
+
+    h3 {
+        @apply text-title-normal;
+    }
+
+    h4 {
+        @apply text-title-small;
+    }
+
+    p,
+    ol,
+    ul {
+        @apply m-0;
+    }
+
+    ol > li::marker {
+        @apply font-bold;
+    }
+
+    p code {
+        @apply bg-secondary-color/60 rounded px-1;
+    }
+
+    blockquote {
+        @apply m-0 border-l-4 border-secondary-color/100 border-solid;
+    }
+
+    blockquote p {
+        @apply p-4 bg-primary-color/100 rounded-r;
+    }
+
+    blockquote p::before {
+        @apply content-['\201C']
+        text-text-color/100 text-title-normal
+        mr-1 leading-[0.1rem] align-middle;
+    }
+
+    blockquote p::after {
+        @apply content-['\201D']
+        text-text-color/100 text-title-normal
+        ml-1 leading-[0.1rem] align-middle;
+    }
+
+    hr {
+        @apply w-full h-0.5 bg-background-opposite-color/100 border-none;
+    }
+
+    table {
+        @apply border-1 border-solid border-background-opposite-color/60
+        border-separate border-spacing-0 rounded;
+    }
+
+    th {
+        @apply bg-secondary-color/80 font-primary;
+    }
+
+    th {
+        @apply py-1 px-2
+        border-l-1 border-l-background-opposite-color/60 border-solid;
+    }
+
+    td {
+        @apply py-1 px-2
+        border-t-1 border-t-background-opposite-color/60
+        border-l-1 border-l-background-opposite-color/60 border-solid;
+    }
+
+    tr > th:first-child,
+    td:first-child {
+        @apply border-l-0;
+    }
+
+    pre {
+        @apply flex flex-col items-center justify-center;
+    }
+
+    pre > code {
+        @apply min-w-[75%] p-4 bg-secondary-color/100 rounded;
+    }
+
+    figure {
+        @apply flex flex-col items-center justify-center;
+    }
+
+    figcaption {
+        @apply mt-1 text-[0.9rem];
+    }
+
+    @media screen and (max-width: 768px) {
+        :root {
+            --font-size-title-huge: 3.125rem;
+            --font-size-title-large: 2.25rem;
+            --font-size-title-normal: 1.5rem;
+            --font-size-title-small: 1rem;
+            --font-size-base: 0.825rem;
+        }
+
+        body {
+            @apply leading-normal;
+        }
+
+        blockquote p {
+            @apply p-3;
+        }
+
+        blockquote p::before {
+            @apply mr-0.5;
+        }
+
+        blockquote p::after {
+            @apply ml-0.5;
+        }
+
+        hr {
+            @apply h-0.5;
+        }
+
+        th,
+        td {
+            @apply py-0.5 px-1;
+        }
+    }
+}

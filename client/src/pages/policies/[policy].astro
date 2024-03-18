@@ -1,0 +1,51 @@
+---
+import { getCollection, CollectionEntry } from "astro:content";
+import PolicyLayout from "@layouts/PolicyLayout.astro";
+
+import type { Policy } from "@models/policies";
+
+export async function getStaticPaths() {
+    const policies: Policy[] = await getCollection("policy") ?? [];
+
+    return policies.map((policy) => (
+        {
+            params: {
+                policy: policy.slug
+            },
+            props: {
+                title: policy.data.title,
+                createdDate: policy.data.createdDate,
+                updatedDate: policy.data.updatedDate,
+                policy: policy
+            }
+        }
+    ));
+}
+
+interface Props {
+    title: string;
+    createdDate: Date;
+    updatedDate: Date;
+    policy: CollectionEntry<"policy">;
+}
+
+const { policy } = Astro.params;
+const {
+    title,
+    createdDate,
+    updatedDate,
+    policy: markdownPolicy
+} = Astro.props;
+
+const { Content } = await markdownPolicy.render();
+---
+
+<PolicyLayout
+    title={title}
+    createdDate={createdDate}
+    updatedDate={updatedDate}
+>
+    <div slot="content" class="at-markdown-section">
+        <Content />
+    </div>
+</PolicyLayout>

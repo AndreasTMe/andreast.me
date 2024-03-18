@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import FooterLink from "./FooterLink.astro";
+import { Route } from "@data/routes";
+
+import type { Policy } from "@models/policies";
+
+const policies: Policy[] = await getCollection("policy") ?? [];
+---
+
+<Fragment>
+    {policies.length > 0 &&
+        <nav aria-label="Footer Policies Navigation">
+            <ul class="flex justify-center items-center gap-4">
+                {policies.map((policy) => (
+                    <li>
+                        <small>
+                            <FooterLink
+                                label={policy.data.title}
+                                alt={`Go to the ${policy.data.title} page`}
+                                href={`${Route.POLICIES}/${policy.slug}`}
+                            />
+                        </small>
+                    </li>
+                ))}
+            </ul>
+        </nav>}
+</Fragment>

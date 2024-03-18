@@ -1,0 +1,62 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+    label: string;
+    alt: string;
+    href: string;
+    icon?: string;
+    iconSize?: string;
+    isExternal?: boolean;
+    disabled?: boolean;
+}
+
+const {
+    label,
+    alt,
+    href,
+    icon,
+    iconSize = "24px",
+    isExternal = false
+} = Astro.props;
+---
+
+<style>
+    .footer-link {
+        @apply p-1 text-text-opposite-color dark:text-text-color
+        decoration-0 flex gap-2 items-center;
+    }
+
+    .footer-link:hover {
+        @apply underline;
+    }
+
+    .footer-link > *:first-child {
+        @apply transition-transform duration-200 ease-out;
+    }
+
+    .footer-link:hover > *:first-child {
+        @apply scale-125;
+    }
+
+    @media screen and (max-width: 768px) {
+        .footer-link:hover {
+            @apply decoration-0;
+        }
+    }
+</style>
+
+<a
+    href={href}
+    title={alt}
+    rel={isExternal ? "noopener noreferrer" : undefined}
+    target={isExternal ? "_blank" : "_self"}
+    class="footer-link"
+    aria-label={alt}
+>
+    <span>
+        {icon &&
+            <Icon name={icon} size={iconSize} />}
+    </span>
+    <span>{label}</span>
+</a>

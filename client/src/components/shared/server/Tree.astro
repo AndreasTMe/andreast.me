@@ -1,0 +1,78 @@
+---
+import type { Tree } from "@models/tree.ts";
+
+interface Props {
+    tree: Tree;
+    level?: number;
+}
+
+const {
+    tree,
+    level = 1
+} = Astro.props;
+---
+
+<style>
+    .tree ul {
+        @apply w-full ml-0 px-4;
+    }
+
+    .tree li {
+        @apply w-full pl-4 list-none;
+    }
+
+    .tree summary {
+        @apply pl-4 rounded select-none
+        transition-[background-color] duration-200 ease-in-out;
+    }
+
+    .tree summary:hover {
+        @apply cursor-pointer bg-accent-color/60;
+    }
+
+    .tree details[aria-expanded="true"] summary ~ * {
+        animation: close 500ms ease-in-out;
+    }
+
+    .tree details[aria-expanded="false"] summary ~ * {
+        animation: open 500ms ease-in-out;
+    }
+</style>
+
+<div class="tree">
+    {tree.sort((a, b) => b.order - a.order)
+         .map((treeItem) => (
+             <ul role={level === 1 ? "tree" : "group"}>
+                 <li
+                     role="treeitem"
+                     aria-label={treeItem.value}
+                     aria-level={level}
+                 >
+                     {treeItem.href &&
+                     !treeItem.children || treeItem.children.length === 0
+                         ? (
+                             <summary>
+                                 <a
+                                     href={treeItem.href}
+                                     title={treeItem.value}
+                                     target="_self"
+                                 >
+                                     {treeItem.value}
+                                 </a>
+                             </summary>
+                         )
+                         : (
+                             <details open={treeItem.isExpanded}>
+                                 <summary>
+                                     {treeItem.value}
+                                 </summary>
+
+                                 {treeItem.children &&
+                                     <Astro.self tree={treeItem.children} level={level + 1} />}
+                             </details>
+                         )
+                     }
+                 </li>
+             </ul>
+         ))}
+</div>

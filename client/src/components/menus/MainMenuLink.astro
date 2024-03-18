@@ -1,0 +1,44 @@
+---
+interface Props {
+    label: string;
+    alt: string;
+    href: string;
+}
+
+const { label, alt, href } = Astro.props;
+---
+
+<style>
+    .nav-menu-item > a {
+        @apply px-10 py-5
+        transition-[background-color] duration-100 ease-out;
+    }
+
+    .nav-menu-item > a:hover {
+        @apply bg-accent-color/80 text-text-opposite-color;
+    }
+
+    @media screen and (max-width: 1200px) {
+        .nav-menu-item > a {
+            @apply px-8 py-4;
+        }
+    }
+
+    @media screen and (max-width: 992px) {
+        .nav-menu-item > a {
+            @apply px-5 py-3;
+        }
+    }
+</style>
+
+<li class="nav-menu-item">
+    <a
+        href={href}
+        title=`${label} Page`
+        target="_self"
+        class="footer-link"
+        aria-label=`Go to the ${label} Page.`
+    >
+        <span>{label}</span>
+    </a>
+</li>
